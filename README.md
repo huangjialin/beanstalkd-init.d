@@ -1,10 +1,9 @@
 # beanstalkd-init.d
 shell script for beanstalkd run under linux by services start beanstalkd
 
-# usage
-copy `beanstalkd` to /etc/init.d/beanstalkd and gives an execute permission by command:
-sudo cp beanstalkd /etc/init.d/beanstalkd
-chmod +x /etc/init.d/beanstalkd
+# copy beanstalkd to /etc/init.d/beanstalkd and gives an execute permission by command:
+- sudo cp beanstalkd /etc/init.d/beanstalkd
+- chmod +x /etc/init.d/beanstalkd
 
 # run service:
 sudo service beanstalkd start
