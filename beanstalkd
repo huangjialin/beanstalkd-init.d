@@ -1,0 +1,47 @@
+#! /bin/bash
+
+BEANSTALKPORT=11300
+EXEC=/usr/local/beanstalkd/bin/beanstalkd
+
+LOGFILE=/tmp/beanstalkd.log
+PIDFILE=/var/run/beanstalkd.pid
+   
+case "$1" in
+    start)
+        if [ -f $PIDFILE ]; then
+                echo "$PIDFILE exists, process is already running or crashed"
+        else
+                echo -n "Starting Beanstalkd server..."
+                nohup $EXEC > $LOGFILE 2>&1 &
+                PID=$(head -n 1 $LOGFILE | cut -d' ' -f2)
+				echo $PID > $PIDFILE
+                if [ "$?"="0" ]; then
+                    echo " done"
+                else
+                    echo " failed"
+                fi
+        fi
+        ;;
+    stop)
+        if [ ! -f $PIDFILE ]; then
+                echo "$PIDFILE does not exist, process is not running"
+        else
+                PID=$(cat $PIDFILE)
+                echo "Stopping Beanstalkd server..."
+                kill -9 $PID
+                if [ "$?"="0" ]; then
+					rm -rf $PIDFILE
+                    echo " done"
+                else
+                    echo " failed"
+                fi
+        fi
+        ;;
+   restart)
+        ${0} stop
+        ${0} start
+        ;;
+  *)
+    echo "Usage: /etc/init.d/beanstalkd {start|stop|restart}" >&2
+        exit 1
+esac
